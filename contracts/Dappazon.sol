@@ -2,9 +2,10 @@
 pragma solidity ^0.8.9;
 
 contract Dappazon {
+    // State variables
     address public owner;
-    string public name;
 
+    // Structs
     struct Item {
         uint256 id;
         string name;
@@ -15,8 +16,11 @@ contract Dappazon {
         uint256 stock;
     }
 
+    // Mappings
     mapping(uint256 => Item) public items;
 
+
+    // Events
     event List(
         uint256 id,
         string name,
@@ -27,8 +31,13 @@ contract Dappazon {
         uint256 stock
     );
 
+    // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
+    
     constructor() {
-        name = "Dappazon";
         owner = msg.sender;
     }
 
@@ -52,7 +61,7 @@ contract Dappazon {
         uint256 _cost,
         uint256 _rating,
         uint256 _stock
-    ) public {
+    ) public onlyOwner {
         // Create Item struct
         Item memory item = Item(
             _id,
