@@ -17,6 +17,16 @@ contract Dappazon {
 
     mapping(uint256 => Item) public items;
 
+    event List(
+        uint256 id,
+        string name,
+        string category,
+        string image,
+        uint256 cost,
+        uint256 rating,
+        uint256 stock
+    );
+
     constructor() {
         name = "Dappazon";
         owner = msg.sender;
@@ -55,6 +65,9 @@ contract Dappazon {
         );
         // Save Item to blockchain
         items[_id] = item;
+
+        // Emit event
+        emit List(_id, _name, _category, _image, _cost, _rating, _stock);
     }
     // Buy products
     // Withdraw funds

@@ -3,7 +3,14 @@ const { expect } = require("chai");
 const tokens = (n) => {
     return ethers.utils.parseUnits(n.toString(), "ether");
 };
-
+const ID = 1;
+const NAME = "Shoes";
+const CATEGORY = "Clothing";
+const IMAGE =
+    "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
+const COST = tokens(1);
+const RATING = 4;
+const STOCK = 5;
 describe("Dappazon", () => {
     let dappazon;
     beforeEach(async () => {
@@ -22,14 +29,7 @@ describe("Dappazon", () => {
     });
     describe("Listing items", async () => {
         let transaction;
-        const ID = 1;
-        const NAME = "Shoes";
-        const CATEGORY = "Clothing";
-        const IMAGE =
-            "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
-        const COST = tokens(1);
-        const RATING = 4;
-        const STOCK = 5;
+
         beforeEach(async () => {
             transaction = await dappazon
                 .connect(deployer)
@@ -50,6 +50,11 @@ describe("Dappazon", () => {
             expect(item.cost).to.equal(COST);
             expect(item.rating).to.equal(RATING);
             expect(item.stock).to.equal(STOCK);
+        });
+        it("Emit List", async () => {
+            expect(transaction)
+                .to.emit(dappazon, "List")
+                .withArgs(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
         });
     });
 });
