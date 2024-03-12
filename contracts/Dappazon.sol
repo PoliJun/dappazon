@@ -23,8 +23,7 @@ contract Dappazon {
     }
 
     // List products
-    
-    
+
     /**
      * @dev List a new item on the Dappazon marketplace.
      * @param _id The unique identifier for the item.
@@ -35,7 +34,7 @@ contract Dappazon {
      * @param _rating The rating of the item.
      * @param _stock The stock quantity of the item.
      */
-    function list (
+    function list(
         uint256 _id,
         string memory _name,
         string memory _category,
@@ -45,7 +44,15 @@ contract Dappazon {
         uint256 _stock
     ) public {
         // Create Item struct
-        Item memory item = Item(_id, _name, _category, _image, _cost, _rating, _stock);
+        Item memory item = Item(
+            _id,
+            _name,
+            _category,
+            _image,
+            _cost,
+            _rating,
+            _stock
+        );
         // Save Item to blockchain
         items[_id] = item;
     }
