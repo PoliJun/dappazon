@@ -1,0 +1,18 @@
+{
+    "tabWidth": 4,
+    "useTabs": false,
+    "trailingComma": "all",
+    "printWidth": 80,
+    "bracketSpacing": true,
+    "singleAttributePerLine": true,
+    "bracketSameLine": true,
+    "plugins": ["prettier-plugin-solidity"],
+    "overrides": [
+        {
+            "files": "*.{json,jsx,tsx}",
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}
