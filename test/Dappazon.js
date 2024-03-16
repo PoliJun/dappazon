@@ -1,4 +1,6 @@
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { describe, it, beforeEach } = require("mocha");
 
 const tokens = (n) => {
     return ethers.utils.parseUnits(n.toString(), "ether");
@@ -12,6 +14,7 @@ const COST = tokens(1);
 const RATING = 4;
 const STOCK = 5;
 describe("Dappazon", () => {
+    let deployer, buyer;
     let dappazon;
     beforeEach(async () => {
         // Set up accounts
@@ -55,6 +58,29 @@ describe("Dappazon", () => {
             expect(transaction)
                 .to.emit(dappazon, "List")
                 .withArgs(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+        });
+    });
+    describe("Buying items", async () => {
+        let transaction;
+        beforeEach(async () => {
+            await dappazon
+                .connect(deployer)
+                .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+            transaction = await dappazon
+                .connect(buyer)
+                .buy(ID, { value: COST });
+            await transaction.wait();
+        });
+        // it("Buy an item", async () => {
+        //     const item = await dappazon.items(ID);
+        //     expect(item.stock).to.equal(STOCK - 1);
+        // });
+        it("Updates the contract balance", async () => {
+            const result = await ethers.provider.getBalance(dappazon.address);
+            expect(result).to.equal(COST);
+        });
+        it("Emit Buy", async () => {
+            expect(transaction).to.emit(dappazon, "Buy").withArgs(ID, COST);
         });
     });
 });

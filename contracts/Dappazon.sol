@@ -19,7 +19,6 @@ contract Dappazon {
     // Mappings
     mapping(uint256 => Item) public items;
 
-
     // Events
     event List(
         uint256 id,
@@ -36,7 +35,7 @@ contract Dappazon {
         require(msg.sender == owner, "Only owner can call this function");
         _;
     }
-    
+
     constructor() {
         owner = msg.sender;
     }
@@ -79,5 +78,12 @@ contract Dappazon {
         emit List(_id, _name, _category, _image, _cost, _rating, _stock);
     }
     // Buy products
+    function buy(uint256 _id) public payable {
+        // todo: receive Crypto
+        
+        // todo: create an order
+        // todo: substract stock
+        // todo: emit event
+    }
     // Withdraw funds
 }
