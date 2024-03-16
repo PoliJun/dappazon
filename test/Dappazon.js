@@ -88,8 +88,30 @@ describe("Dappazon", () => {
             expect(order.time).to.be.greaterThan(0);
             expect(order.item.name).to.equal(NAME);
         });
-        // it("Emit Buy", async () => {
-        //     expect(transaction).to.emit(dappazon, "Buy").withArgs(ID, COST);
-        // });
+        it("Emit Buy", async () => {
+            expect(transaction).to.emit(dappazon, "Buy");
+        });
+    });
+    describe("Withdraw funds", async () => {
+        let transaction, balanceBefore;
+        beforeEach(async () => {
+            await dappazon
+                .connect(deployer)
+                .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+            await dappazon.connect(buyer).buy(ID, { value: COST });
+            balanceBefore = await ethers.provider.getBalance(deployer.address);
+            transaction = await dappazon.connect(deployer).withdraw();
+            await transaction.wait();
+        });
+        it("Updates owner balance", async () => {
+            const balanceAfter = await ethers.provider.getBalance(
+                deployer.address,
+            );
+            expect(balanceAfter).to.be.greaterThan(balanceBefore);
+        });
+        it("Updates contract balance", async () => {
+            const balance = await ethers.provider.getBalance(dappazon.address);
+            expect(balance).to.equal(0);
+        });
     });
 });

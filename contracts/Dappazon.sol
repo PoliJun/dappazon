@@ -23,7 +23,7 @@ contract Dappazon {
 
     // Mappings
     mapping(uint256 => Item) public items;
-    mapping(address => uint256) public orderCount;
+    mapping(address => uint256) public orderCount; // orderId
     mapping(address => mapping(uint256 => Order)) public orders;
 
     // Events
@@ -37,6 +37,8 @@ contract Dappazon {
         uint256 stock
     );
 
+    event Buy(address buyer, uint256 orderId, uint256 itemId);
+
     // Modifiers
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function");
@@ -47,9 +49,8 @@ contract Dappazon {
         owner = msg.sender;
     }
 
-    // List products
-
     /**
+     * List products
      * @dev List a new item on the Dappazon marketplace.
      * @param _id The unique identifier for the item.
      * @param _name The name of the item.
@@ -84,20 +85,48 @@ contract Dappazon {
         // Emit event
         emit List(_id, _name, _category, _image, _cost, _rating, _stock);
     }
-    // Buy products
+
+    /**
+     * Buy products
+     * @dev Allows a user to buy an item from the Dappazon marketplace.
+     * @param _id The ID of the item to be purchased.
+     */
     function buy(uint256 _id) public payable {
         // todo: receive Crypto
 
         // todo: fetch item
         Item memory item = items[_id];
+
+        // * Require enough ether to buy item
+        require(msg.value >= item.cost, "Not enough ether to buy item");
+
+        // * Require item in stock
+        require(item.stock > 0, "Item out of stock");
+
         // todo: create an order
         Order memory order = Order(block.timestamp, item);
+
         // todo: save order to blockchain
         orderCount[msg.sender]++;
         orders[msg.sender][orderCount[msg.sender]] = order;
-        // todo: substract stock
+
+        // todo: subtract stock
         items[_id].stock = item.stock - 1;
+
         // todo: emit event
+        emit Buy(msg.sender, orderCount[msg.sender], _id);
     }
-    // Withdraw funds
+
+    /**
+     * Withdraw Ether
+     * @dev Allows the owner of the contract to withdraw the Ether balance from the contract.
+     * @notice Only the contract owner can call this function.
+     * @dev Emits a `Withdraw` event upon successful withdrawal.
+     * @dev Throws an error if the withdrawal fails.
+     */
+    function withdraw() public onlyOwner {
+        // * Transfer Ether to owner
+        (bool success, ) = owner.call{ value: address(this).balance }("");
+        require(success, "Failed to withdraw Ether");
+    }
 }
