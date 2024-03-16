@@ -32,3 +32,7 @@ Wei is the smallest denomination of ether, the cryptocurrency used on the Ethere
 ## Emit Event
 
 Emitting an event in Solidity is a way to notify the front-end application that something has happened on the blockchain. It is a way to communicate from the smart contract to the front-end application.
+
+## block.timestamp
+
+`block.timestamp` is a global variable in Solidity that gives the current block timestamp as a Unix timestamp (seconds since the Unix epoch).

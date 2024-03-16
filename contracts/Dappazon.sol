@@ -16,8 +16,15 @@ contract Dappazon {
         uint256 stock;
     }
 
+    struct Order {
+        uint256 time;
+        Item item;
+    }
+
     // Mappings
     mapping(uint256 => Item) public items;
+    mapping(address => uint256) public orderCount;
+    mapping(address => mapping(uint256 => Order)) public orders;
 
     // Events
     event List(
@@ -80,9 +87,16 @@ contract Dappazon {
     // Buy products
     function buy(uint256 _id) public payable {
         // todo: receive Crypto
-        
+
+        // todo: fetch item
+        Item memory item = items[_id];
         // todo: create an order
+        Order memory order = Order(block.timestamp, item);
+        // todo: save order to blockchain
+        orderCount[msg.sender]++;
+        orders[msg.sender][orderCount[msg.sender]] = order;
         // todo: substract stock
+        items[_id].stock = item.stock - 1;
         // todo: emit event
     }
     // Withdraw funds
