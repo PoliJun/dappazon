@@ -13,7 +13,9 @@
   "plugins": ["react"],
   "rules": {
     "no-unused-vars": "warn",
-    "no-trailing-spaces": "warn"
+    "no-trailing-spaces": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off"
     // "no-console": "warn"
   }
 }
